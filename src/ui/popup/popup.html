@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al-Kantara Security</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/icons/logo.svg">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="hd">
+      <div class="hd-l">
+        <img class="hd-icon" src="../../assets/icons/logo.svg" alt="" width="20" height="20">
+        <div class="hd-t"><b>AL-KANTARA</b><small>SECURITY</small></div>
+      </div>
+      <div class="hd-r">
+        <code id="buildVersion" class="tag">v1.3.1</code>
+        <span class="led" id="statusDot"></span>
+      </div>
+    </header>
+
+    <div class="ks" id="killSwitchBtn">
+      <div class="ks-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 6.5v5.5c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6.5L12 2z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <div class="ks-txt">
+        <span class="ks-lbl" id="killSwitchLabel">KILL SWITCH</span>
+        <span class="ks-sub" id="killSwitchStatus">Disengaged</span>
+      </div>
+    </div>
+
+    <fieldset class="grp">
+      <legend>Profile</legend>
+      <div class="tabs">
+        <button class="tab active" data-profile="strict">Strict</button>
+        <button class="tab" data-profile="moderate">Moderate</button>
+        <button class="tab" data-profile="disabled">Off</button>
+      </div>
+    </fieldset>
+
+    <div class="info-grid">
+      <div class="info"><dt>Persona</dt><dd id="telemetryPersona">Win11 Edge</dd></div>
+      <div class="info"><dt>DNS Shield</dt><dd id="telemetryDns">Active</dd></div>
+      <div class="info"><dt>WebRTC</dt><dd id="telemetryWebrtc">Blocked</dd></div>
+      <div class="info"><dt>Last Clean</dt><dd id="telemetryClean">Never</dd></div>
+    </div>
+
+    <div class="row2">
+      <button class="btn" id="chemicalCleanBtn">Chemical Clean</button>
+      <button class="btn pri" id="openDashboardBtn">Dashboard</button>
+    </div>
+
+    <footer class="ft">
+      Powered by <a href="https://github.com/urbanyl" target="_blank">Urbanyl</a>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

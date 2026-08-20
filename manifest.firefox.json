@@ -1,0 +1,68 @@
+{
+  "manifest_version": 2,
+  "name": "Al-Kantara Security",
+  "version": "1.0.0",
+  "description": "Enterprise-grade zero-trust browser security extension",
+  "author": "Urbanyl",
+  "default_locale": "en",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "alkantara-security@urbanyl.github.io",
+      "strict_min_version": "109.0"
+    }
+  },
+
+  "icons": {
+    "16": "src/assets/icons/icon16.png",
+    "48": "src/assets/icons/icon48.png",
+    "128": "src/assets/icons/icon128.png"
+  },
+
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "browsingData",
+    "cookies",
+    "webNavigation",
+    "<all_urls>"
+  ],
+
+  "background": {
+    "scripts": [
+      "src/utils/storage-manager.js",
+      "src/core/background.js"
+    ],
+    "persistent": true
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "src/utils/storage-manager.js",
+        "src/core/fingerprint-spoofer.js",
+        "src/content/content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+
+  "browser_action": {
+    "default_popup": "src/ui/popup/popup.html",
+    "default_icon": {
+      "16": "src/assets/icons/icon16.png",
+      "48": "src/assets/icons/icon48.png"
+    },
+    "default_title": "Al-Kantara Security"
+  },
+
+  "web_accessible_resources": [
+    "src/ui/dashboard/dashboard.html",
+    "src/assets/icons/*"
+  ]
+}

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al-Kantara Security v1.2 — Mission Control</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/icons/logo.svg">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<div class="shell">
+
+  <nav class="nav">
+    <div class="nav-top">
+      <div class="nav-brand">
+        <svg class="nav-logo" viewBox="-1 -1 26 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 6.5v5.5c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6.5L12 2z"/><path d="M9 12l2 2 4-4"/></svg>
+        <div><b>AL-KANTARA</b><small>v1.3.1 MISSION CONTROL</small></div>
+      </div>
+      <ul class="nav-links">
+        <li><button class="nav-link on" data-tab="overview">Overview</button></li>
+        <li><button class="nav-link" data-tab="threats">Threat Monitor</button></li>
+        <li><button class="nav-link" data-tab="fingerprint">Fingerprint</button></li>
+        <li><button class="nav-link" data-tab="network">Network</button></li>
+        <li><button class="nav-link" data-tab="navigator">Navigator</button></li>
+        <li><button class="nav-link" data-tab="cipher">Cipher Lab</button></li>
+        <li><button class="nav-link" data-tab="vault">Encrypted Vault</button></li>
+        <li><button class="nav-link" data-tab="advanced">Advanced</button></li>
+        <li><button class="nav-link" data-tab="clean">Chemical Clean</button></li>
+        <li><button class="nav-link" data-tab="logs">Logs</button></li>
+        <li><button class="nav-link" data-tab="execute">Execution</button></li>
+        <li><button class="nav-link" data-tab="settings">Settings</button></li>
+      </ul>
+    </div>
+    <div class="nav-bot">
+      <span class="led" id="sidebarDot"></span>
+      <span class="nav-spacer"></span>
+      <span>Powered by <a href="https://github.com/urbanyl" target="_blank">Urbanyl</a></span>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <!-- ═══ OVERVIEW ═══ -->
+    <section class="p active" id="p-overview">
+      <h1 class="p-title">Overview</h1>
+      <div class="row4">
+        <div class="stat"><dt>STATUS</dt><dd class="stat-v g" id="statStatus">ARMED</dd><dd class="stat-s">All systems operational</dd></div>
+        <div class="stat"><dt>PROFILE</dt><dd class="stat-v" id="statProfile">STRICT</dd><dd class="stat-s">Active policy</dd></div>
+        <div class="stat"><dt>REQUESTS</dt><dd class="stat-v mono" id="statRequests">0</dd><dd class="stat-s">Intercepted</dd></div>
+        <div class="stat"><dt>BUILD</dt><dd class="stat-v mono" id="statBuild">1.3.1</dd><dd class="stat-s" id="statChecksum">SHA: ---</dd></div>
+      </div>
+      <div class="row2">
+        <div class="panel ks-panel"><div class="panel-h">Kill Switch</div><div class="panel-b center"><button class="ks-btn" id="dashKillBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 6.5v5.5c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V6.5L12 2z"/><path d="M9 12l2 2 4-4"/></svg><span id="dashKillLabel">ENGAGE</span></button><p class="hint">Blocks all network traffic immediately.</p></div></div>
+        <div class="panel"><div class="panel-h">Security Profile</div><div class="panel-b"><label class="radio"><input type="radio" name="profile" value="strict" checked><span class="radio-dot"></span><div><b>Strict</b><small>Full header rewrite, WebRTC blocked, DNS shield, all fingerprints spoofed</small></div></label><label class="radio"><input type="radio" name="profile" value="moderate"><span class="radio-dot"></span><div><b>Moderate</b><small>Header rewrite, DNS shield, WebRTC allowed</small></div></label><label class="radio"><input type="radio" name="profile" value="disabled"><span class="radio-dot"></span><div><b>Disabled</b><small>No protections active</small></div></label></div></div>
+      </div>
+      <div class="row3">
+        <div class="panel sm"><div class="panel-h">DNS Shield</div><div class="panel-b row"><span class="lbl g" id="dnsLabel">Active</span><button class="sw" id="dnsToggle"><i></i></button></div></div>
+        <div class="panel sm"><div class="panel-h">WebRTC</div><div class="panel-b"><select class="sel" id="webrtcSelect"><option value="disabled">Blocked</option><option value="block">Disabled</option><option value="force_proxy">Force Proxy</option></select></div></div>
+        <div class="panel sm"><div class="panel-h">Persona</div><div class="panel-b"><select class="sel" id="personaSelect"><option value="win11_edge">Win 11 Edge</option><option value="macos_safari">macOS Safari</option><option value="linux_firefox">Linux Firefox</option><option value="win10_chrome">Win 10 Chrome</option><option value="android_chrome">Android</option><option value="ios_safari">iOS Safari</option></select></div></div>
+      </div>
+      <!-- Entropy meter -->
+      <div class="panel mt"><div class="panel-h">Fingerprint Entropy Score</div><div class="panel-b entropy-wrap">
+        <div class="entropy-ring" id="entropyRing">
+          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="none" stroke="var(--bg3)" stroke-width="8"/><circle cx="60" cy="60" r="54" fill="none" stroke="var(--bl)" stroke-width="8" stroke-linecap="round" stroke-dasharray="339.29" stroke-dashoffset="339.29" id="entropyArc" transform="rotate(-90 60 60)"/></svg>
+          <div class="entropy-val" id="entropyVal">0</div>
+        </div>
+        <div class="entropy-info">
+          <p class="entropy-label">Your fingerprint uniqueness score</p>
+          <div class="entropy-bar-wrap"><div class="entropy-bar"><div class="entropy-bar-fill" id="entropyBar"></div></div><span class="entropy-bar-label" id="entropyBarLabel">0%</span></div>
+          <p class="entropy-desc" id="entropyDesc">Analyzing protections...</p>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- ═══ THREAT MONITOR ═══ -->
+    <section class="p" id="p-threats">
+      <h1 class="p-title">Threat Monitor</h1>
+      <div class="row4">
+        <div class="stat"><dt>THREATS BLOCKED</dt><dd class="stat-v r mono" id="tmThreats">0</dd><dd class="stat-s">Malicious requests</dd></div>
+        <div class="stat"><dt>REQUESTS ALLOWED</dt><dd class="stat-v g mono" id="tmAllowed">0</dd><dd class="stat-s">Passed inspection</dd></div>
+        <div class="stat"><dt>URLS CLEANED</dt><dd class="stat-v mono" id="tmCleaned">0</dd><dd class="stat-s">Tracking stripped</dd></div>
+        <div class="stat"><dt>THREAT INTEL</dt><dd class="stat-v g" id="tmIntel">Active</dd><dd class="stat-s">22 known domains</dd></div>
+      </div>
+      <div class="row2">
+        <div class="panel"><div class="panel-h">Network Activity (Last 60s)</div><div class="panel-b flush"><canvas id="netChart" width="500" height="180"></canvas></div></div>
+        <div class="panel"><div class="panel-h">Threat Breakdown</div><div class="panel-b">
+          <div class="threat-bar"><span class="threat-bar-label">Malicious Domains</span><div class="threat-bar-track"><div class="threat-bar-fill rd" id="tbDomains" style="width:0%"></div></div><span class="threat-bar-val" id="tbDomainsVal">0</span></div>
+          <div class="threat-bar"><span class="threat-bar-label">Suspicious IPs</span><div class="threat-bar-track"><div class="threat-bar-fill yl" id="tbIps" style="width:0%"></div></div><span class="threat-bar-val" id="tbIpsVal">0</span></div>
+          <div class="threat-bar"><span class="threat-bar-label">Fingerprint Scripts</span><div class="threat-bar-track"><div class="threat-bar-fill bl" id="tbFp" style="width:0%"></div></div><span class="threat-bar-val" id="tbFpVal">0</span></div>
+          <div class="threat-bar"><span class="threat-bar-label">Tracker Domains</span><div class="threat-bar-track"><div class="threat-bar-fill gn" id="tbTracker" style="width:0%"></div></div><span class="threat-bar-val" id="tbTrackerVal">0</span></div>
+          <div class="threat-bar"><span class="threat-bar-label">URL Cleanups</span><div class="threat-bar-track"><div class="threat-bar-fill" id="tbClean" style="width:0%"></div></div><span class="threat-bar-val" id="tbCleanVal">0</span></div>
+        </div></div>
+      </div>
+      <div class="panel mt"><div class="panel-h">Live Event Feed</div><div class="panel-b flush"><div class="logwrap" id="threatFeed"><div class="empty">Awaiting network activity...</div></div></div></div>
+    </section>
+
+    <!-- ═══ FINGERPRINT ═══ -->
+    <section class="p" id="p-fingerprint">
+      <h1 class="p-title">Anti-Fingerprint</h1>
+      <div class="row2">
+        <div class="panel"><div class="panel-h">Canvas & WebGL</div><div class="panel-b">
+          <div class="set"><div><b>Canvas Fingerprint Noise</b><small>Injects per-pixel noise into toDataURL/toBlob output</small></div><button class="sw" id="fpCanvas"><i></i></button></div>
+          <div class="set"><div><b>WebGL Renderer Spoof</b><small>Overrides UNMASKED_VENDOR/RENDERER + getSupportedExtensions</small></div><button class="sw" id="fpWebgl"><i></i></button></div>
+          <div class="set"><div><b>ClientRects Noise</b><small>Adds sub-pixel noise to getBoundingClientRect/getClientRects</small></div><button class="sw" id="fpClientrects"><i></i></button></div>
+        </div></div>
+        <div class="panel"><div class="panel-h">Audio & Fonts</div><div class="panel-b">
+          <div class="set"><div><b>AudioContext Noise</b><small>Perturbs oscillator frequency + AudioBuffer channel data</small></div><button class="sw" id="fpAudio"><i></i></button></div>
+          <div class="set"><div><b>Font Enumeration Block</b><small>Restricts measureText to common system fonts only</small></div><button class="sw" id="fpFonts"><i></i></button></div>
+        </div></div>
+      </div>
+      <div class="panel mt"><div class="panel-h">Persona Override</div><div class="panel-b"><div class="persona-grid" id="personaGrid"></div></div></div>
+      <div class="panel mt"><div class="panel-h">Spoofed Properties</div><div class="panel-b flush"><div class="tbl" id="spoofedProps"></div></div></div>
+    </section>
+
+    <!-- ═══ NETWORK ═══ -->
+    <section class="p" id="p-network">
+      <h1 class="p-title">Network Protection</h1>
+      <div class="row2">
+        <div class="panel"><div class="panel-h">Headers</div><div class="panel-b">
+          <div class="set"><div><b>Do Not Track (DNT)</b><small>Sends DNT:1 header on all requests</small></div><button class="sw" id="netDnt"><i></i></button></div>
+          <div class="set"><div><b>Global Privacy Control (GPC)</b><small>Sends Sec-GPC:1 header — legally binding in CCPA/CPRA</small></div><button class="sw" id="netGpc"><i></i></button></div>
+          <div class="set"><div><b>Strip Accept-CH</b><small>Removes all Client Hints headers (Sec-CH-UA-*)</small></div><button class="sw" id="netAcceptch"><i></i></button></div>
+          <div class="set"><div><b>Strip Sec-Fetch-*</b><small>Removes fingerprint-revealing fetch metadata</small></div><button class="sw" id="netSecfetch"><i></i></button></div>
+          <div class="set"><div><b>Strip IP Leak Headers</b><small>X-Forwarded-For, CF-Connecting-IP, X-Real-IP, Forwarded</small></div><button class="sw" id="netIpleak"><i></i></button></div>
+        </div></div>
+        <div class="panel"><div class="panel-h">Traffic Control</div><div class="panel-b">
+          <div class="set"><div><b>Strict Referrer</b><small>Strips referrer on cross-origin + all subresource requests</small></div><button class="sw" id="netReferrer"><i></i></button></div>
+          <div class="set"><div><b>Cache Clear on Nav</b><small>Purges browser cache on every navigation</small></div><button class="sw" id="netCache"><i></i></button></div>
+          <div class="set"><div><b>ETag Tracking Block</b><small>Clears cached responses to prevent ETag fingerprinting</small></div><button class="sw" id="netEtag"><i></i></button></div>
+          <div class="set"><div><b>Link Tracker Cleaner</b><small>Strips 30+ tracking params (utm_*, fbclid, gclid...)</small></div><button class="sw" id="netLinkclean"><i></i></button></div>
+          <div class="set"><div><b>Force HTTPS (HSTS)</b><small>Upgrades all HTTP requests to HTTPS</small></div><button class="sw" id="netHsts"><i></i></button></div>
+        </div></div>
+      </div>
+      <div class="panel mt"><div class="panel-h">DNS Protection</div><div class="panel-b"><p class="desc">Blocks unencrypted DNS queries. Forces secure channels only.</p><div class="row mt"><span style="font-size:11px;color:var(--tx2)">Enable</span><button class="sw" id="dnsToggle2"><i></i></button></div></div></div>
+      <div class="panel mt"><div class="panel-h">HTTP Header Rewrite Preview</div><div class="panel-b flush"><pre class="code" id="headerPreview"></pre></div></div>
+    </section>
+
+    <!-- ═══ NAVIGATOR ═══ -->
+    <section class="p" id="p-navigator">
+      <h1 class="p-title">Navigator API Protection</h1>
+      <div class="row2">
+        <div class="panel"><div class="panel-h">Hardware APIs</div><div class="panel-b">
+          <div class="set"><div><b>Battery API Block</b><small>Prevents getBattery() from leaking charging state + level</small></div><button class="sw" id="navBattery"><i></i></button></div>
+          <div class="set"><div><b>Media Devices Block</b><small>Blocks enumerateDevices() — no camera/mic list leak</small></div><button class="sw" id="navMedia"><i></i></button></div>
+          <div class="set"><div><b>WebRTC IP Leak Block</b><small>Kills RTCPeerConnection + getUserMedia — zero IP leak</small></div><button class="sw" id="navWebrtcip"><i></i></button></div>
+          <div class="set"><div><b>Bluetooth / USB / Serial / HID</b><small>Blocks all hardware enumeration APIs</small></div><button class="sw" id="navHardware"><i></i></button></div>
+        </div></div>
+        <div class="panel"><div class="panel-h">Other APIs</div><div class="panel-b">
+          <div class="set"><div><b>Speech Synthesis Block</b><small>Prevents voice enumeration fingerprinting</small></div><button class="sw" id="navSpeech"><i></i></button></div>
+          <div class="set"><div><b>Presentation API Block</b><small>Deletes PresentationRequest — prevents cast device detection</small></div><button class="sw" id="navPresentation"><i></i></button></div>
+          <div class="set"><div><b>Performance Timing Block</b><small>Zeroes redirect count, blocks navigation timing leak</small></div><button class="sw" id="navPerf"><i></i></button></div>
+          <div class="set"><div><b>Permission API Spoof</b><small>Returns "prompt" for all permission queries</small></div><button class="sw" id="navPerm"><i></i></button></div>
+          <div class="set"><div><b>Locks API Block</b><small>Prevents navigator.locks enumeration fingerprinting</small></div><button class="sw" id="navLocks"><i></i></button></div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ═══ CIPHER LAB ═══ -->
+    <section class="p" id="p-cipher">
+      <h1 class="p-title">Cipher Lab</h1>
+      <div class="row2">
+        <div class="panel"><div class="panel-h">Encrypt / Decrypt</div><div class="panel-b">
+          <label class="lbl">Algorithm</label>
+          <select class="sel" id="cipherAlgo">
+            <option value="aes-gcm-256">AES-256-GCM (PBKDF2 600k)</option>
+            <option value="aes-gcm-128">AES-128-GCM (PBKDF2 300k)</option>
+            <option value="xor-chacha">XOR ChaCha</option>
+            <option value="caesar-13">ROT13 (Caesar)</option>
+          </select>
+          <label class="lbl">Passphrase</label>
+          <input type="password" class="inp" id="cipherPass" placeholder="Enter passphrase...">
+          <label class="lbl">Input</label>
+          <textarea class="textarea" id="cipherInput" placeholder="Enter text to encrypt or ciphertext to decrypt..."></textarea>
+          <div class="cipher-btns">
+            <button class="btn bl" id="cipherEncBtn">Encrypt</button>
+            <button class="btn" id="cipherDecBtn">Decrypt</button>
+            <button class="btn sm" id="cipherCopyBtn">Copy Output</button>
+          </div>
+          <label class="lbl">Output</label>
+          <textarea class="textarea" id="cipherOutput" readonly placeholder="Result will appear here..."></textarea>
+        </div></div>
+        <div class="panel"><div class="panel-h">Cipher Info</div><div class="panel-b">
+          <div class="cipher-info">
+            <div class="cipher-info-card"><b>AES-256-GCM</b><small>Authenticated encryption with 256-bit key. Industry standard for classified data. PBKDF2 key derivation with 600,000 iterations.</small><span class="cipher-badge gn">Quantum-resistant prep</span></div>
+            <div class="cipher-info-card"><b>AES-128-GCM</b><small>Fast authenticated encryption. 300k PBKDF2 iterations. Suitable for general-purpose encryption.</small><span class="cipher-badge bl">Fast</span></div>
+            <div class="cipher-info-card"><b>XOR ChaCha</b><small>Stream cipher using XOR with rotating key. ChaCha-derived nonce randomization. Fast symmetric encryption.</small><span class="cipher-badge yl">Experimental</span></div>
+            <div class="cipher-info-card"><b>ROT13 Caesar</b><small>Classical substitution cipher. Rotates letters by 13 positions. Educational and encoding purposes.</small><span class="cipher-badge">Classical</span></div>
+          </div>
+          <div class="panel-h mt">Recent Operations</div>
+          <div class="cipher-history" id="cipherHistory"><div class="empty">No cipher operations yet.</div></div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ═══ ENCRYPTED VAULT ═══ -->
+    <section class="p" id="p-vault">
+      <h1 class="p-title">Encrypted Vault</h1>
+      <div class="row2">
+        <div class="panel"><div class="panel-h">Add Entry</div><div class="panel-b">
+          <label class="lbl">Vault Passphrase</label>
+          <input type="password" class="inp" id="vaultPass" placeholder="Vault encryption passphrase...">
+          <label class="lbl">Title</label>
+          <input type="text" class="inp" id="vaultTitle" placeholder="Entry title...">
+          <label class="lbl">Content</label>
+          <textarea class="textarea" id="vaultContent" placeholder="Sensitive data to encrypt and store..."></textarea>
+          <label class="lbl">Category</label>
+          <select class="sel" id="vaultCategory">
+            <option value="credential">Credentials</option>
+            <option value="note">Secure Note</option>
+            <option value="key">API Key / Token</option>
+            <option value="identity">Identity Data</option>
+          </select>
+          <div class="cipher-btns mt">
+            <button class="btn bl" id="vaultAddBtn">Encrypt & Store</button>
+          </div>
+        </div></div>
+        <div class="panel"><div class="panel-h">Stored Entries (<span id="vaultCount">0</span>)</div><div class="panel-b">
+          <label class="lbl">Passphrase to view</label>
+          <input type="password" class="inp" id="vaultViewPass" placeholder="Enter passphrase to decrypt...">
+          <button class="btn sm mt" id="vaultUnlockBtn">Unlock Vault</button>
+          <div class="vault-entries" id="vaultEntries"><div class="empty">No entries stored. Add your first encrypted entry.</div></div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ═══ ADVANCED ═══ -->
+    <section class="p" id="p-advanced">
+      <h1 class="p-title">Advanced Protections</h1>
+      <div class="row2">
+        <div class="panel"><div class="panel-h">DOM & Storage</div><div class="panel-b">
+          <div class="set"><div><b>Window.name Randomization</b><small>Replaces window.name with random value on every page</small></div><button class="sw" id="advWinname"><i></i></button></div>
+          <div class="set"><div><b>Console Sanitizer</b><small>Disables console.log/warn/error — prevents console fingerprinting</small></div><button class="sw" id="advConsole"><i></i></button></div>
+          <div class="set"><div><b>CNAME Cloaking Detector</b><small>Detects and logs cross-origin scripts served via CNAME</small></div><button class="sw" id="advCloak"><i></i></button></div>
+          <div class="set"><div><b>Cookie Isolation</b><small>Enforces SameSite=Lax + Secure on all cookies</small></div><button class="sw" id="advCookieiso"><i></i></button></div>
+        </div></div>
+        <div class="panel"><div class="panel-h">Identity Protection</div><div class="panel-b">
+          <div class="set"><div><b>Timezone Override</b><small>Spoofs Date/Intl.DateTimeFormat to target timezone</small></div><select class="sel sm" id="advTz"><option value="">System Default</option><option value="America/New_York">America/New_York (EST)</option><option value="America/Chicago">America/Chicago (CST)</option><option value="America/Los_Angeles">America/Los_Angeles (PST)</option><option value="Europe/London">Europe/London (GMT)</option><option value="Europe/Paris">Europe/Paris (CET)</option><option value="Europe/Berlin">Europe/Berlin (CET)</option><option value="Asia/Tokyo">Asia/Tokyo (JST)</option><option value="Asia/Shanghai">Asia/Shanghai (CST)</option><option value="Australia/Sydney">Australia/Sydney (AEST)</option><option value="Pacific/Auckland">Pacific/Auckland (NZST)</option></select></div>
+          <div class="set"><div><b>Geolocation Override</b><small>Spoofs navigator.geolocation to target coordinates</small></div><select class="sel sm" id="advGeo"><option value="">System Default</option><option value="40.7128,-74.0060">New York (40.71, -74.01)</option><option value="51.5074,-0.1278">London (51.51, -0.13)</option><option value="48.8566,2.3522">Paris (48.86, 2.35)</option><option value="35.6762,139.6503">Tokyo (35.68, 139.65)</option><option value="52.5200,13.4050">Berlin (52.52, 13.41)</option><option value="34.0522,-118.2437">Los Angeles (34.05, -118.24)</option></select></div>
+        </div></div>
+      </div>
+      <div class="row2">
+        <div class="panel"><div class="panel-h">Identity Rotation</div><div class="panel-b">
+          <div class="set"><div><b>Auto-Rotate Persona</b><small>Automatically switches identity at set intervals</small></div><button class="sw" id="rotToggle"><i></i></button></div>
+          <label class="lbl">Interval (minutes)</label>
+          <select class="sel sm" id="rotInterval"><option value="5">5 min</option><option value="15">15 min</option><option value="30" selected>30 min</option><option value="60">60 min</option><option value="120">2 hours</option></select>
+          <label class="lbl">Sequence</label>
+          <select class="sel sm" id="rotSeq"><option value="cycle">Sequential Cycle</option><option value="random">Random</option></select>
+          <p class="desc mt">Cycles through all 6 personas to prevent long-term fingerprint tracking.</p>
+        </div></div>
+        <div class="panel"><div class="panel-h">Extra Shields</div><div class="panel-b">
+          <div class="set"><div><b>Clipboard Guard</b><small>Wipes clipboard after 30s + spoofs read events</small></div><button class="sw" id="advClipguard"><i></i></button></div>
+          <div class="set"><div><b>Screen Capture Guard</b><small>Adds invisible watermark + blocks screenshot APIs</small></div><button class="sw" id="advScreenguard"><i></i></button></div>
+          <div class="set"><div><b>Memory Scrubber</b><small>Periodically clears window.name, history state, temp data</small></div><button class="sw" id="advMemoryscrub"><i></i></button></div>
+          <div class="set"><div><b>Traffic Obfuscation</b><small>Adds cache/pragmas to look like normal browsing traffic</small></div><button class="sw" id="advTrafficobfusc"><i></i></button></div>
+          <div class="set"><div><b>Mouse Fingerprint Block</b><small>Randomizes mouse event timing to prevent movement tracking</small></div><button class="sw" id="advMouseblock"><i></i></button></div>
+          <div class="set"><div><b>Keystroke Timing Block</b><small>Adds jitter to keyboard event timestamps</small></div><button class="sw" id="advKeyblock"><i></i></button></div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ═══ CHEMICAL CLEAN ═══ -->
+    <section class="p" id="p-clean">
+      <h1 class="p-title">Chemical Clean</h1>
+      <div class="panel"><div class="panel-h">Overwrite & Purge</div><div class="panel-b"><div class="cl-grid"><div class="cl-steps">
+        <div class="cl-s"><span>01</span><div><b>Overwrite</b> — localStorage & sessionStorage filled with random data</div></div>
+        <div class="cl-s"><span>02</span><div><b>IndexedDB</b> — Database purged after overwrite</div></div>
+        <div class="cl-s"><span>03</span><div><b>Cookies</b> — All cookies expired across domains</div></div>
+        <div class="cl-s"><span>04</span><div><b>Cache</b> — HTTP cache cleared</div></div>
+        <div class="cl-s"><span>05</span><div><b>Form Data</b> — Autofill data purged</div></div>
+        <div class="cl-s"><span>06</span><div><b>Downloads</b> — Download history cleared</div></div>
+      </div><div class="cl-right"><button class="btn bl" id="dashChemCleanBtn">Execute Chemical Clean</button><code class="cl-ts" id="lastCleanTime">Last clean: Never</code></div></div></div></div>
+    </section>
+
+    <!-- ═══ LOGS ═══ -->
+    <section class="p" id="p-logs">
+      <div class="p-title-row"><h1 class="p-title">Event Logs</h1><div class="p-acts"><button class="btn sm" id="exportLogsBtn">Export .enc</button><button class="btn sm rd" id="clearLogsBtn">Clear</button></div></div>
+      <div class="panel"><div class="panel-b flush"><div class="logwrap" id="logList"><div class="empty">No log entries.</div></div></div></div>
+      <div class="modal" id="exportModal" style="display:none"><div class="modal-c"><h3>Export Encrypted Logs</h3><label class="lbl">Passphrase</label><input type="password" class="inp" id="exportPassphrase" placeholder="Enter passphrase..."><p class="desc">AES-256-GCM + PBKDF2 (600k iterations).</p><div class="modal-a"><button class="btn sm" id="exportModalCancel">Cancel</button><button class="btn sm bl" id="exportModalConfirm">Export</button></div></div></div>
+    </section>
+
+    <!-- ═══ EXECUTION ═══ -->
+    <section class="p" id="p-execute">
+      <h1 class="p-title">Code Execution</h1>
+      <div class="warn-banner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        <span>Code runs at your own risk. There is no sandbox guarantee. Only run code you trust.</span>
+      </div>
+      <div class="row2">
+        <div class="panel"><div class="panel-h">Editor</div><div class="panel-b">
+          <div class="exec-toolbar">
+            <select class="sel sm" id="execLang">
+              <option value="javascript">JavaScript</option>
+              <option value="html">HTML</option>
+              <option value="css">CSS (inject on page)</option>
+            </select>
+            <input type="text" class="inp sm" id="execScriptName" placeholder="Script name..." style="width:140px">
+            <button class="btn sm bl" id="execRunBtn">Run</button>
+            <button class="btn sm" id="execSaveBtn">Save</button>
+            <button class="btn sm" id="execCopyBtn">Export</button>
+          </div>
+          <textarea class="textarea exec-editor" id="execCode" placeholder="// Write your code here..." spellcheck="false"></textarea>
+        </div></div>
+        <div class="panel"><div class="panel-h">Output</div><div class="panel-b">
+          <div class="exec-output-wrap">
+            <div class="exec-output" id="execOutput"><div class="empty">Output will appear here after execution.</div></div>
+          </div>
+          <div class="panel-h mt">Saved Scripts (<span id="execScriptCount">0</span>)</div>
+          <div class="exec-saved" id="execSavedScripts"><div class="empty">No saved scripts.</div></div>
+        </div></div>
+      </div>
+      <div class="panel mt"><div class="panel-h">Execution History</div><div class="panel-b flush"><div class="logwrap" id="execHistory"><div class="empty">No executions yet.</div></div></div></div>
+    </section>
+
+    <!-- ═══ SETTINGS ═══ -->
+    <section class="p" id="p-settings">
+      <h1 class="p-title">Settings</h1>
+      <div class="panel"><div class="panel-h">General</div><div class="panel-b">
+        <div class="set"><div><b>Notifications</b><small>Browser notifications for security events</small></div><button class="sw" id="notifToggle"><i></i></button></div>
+        <div class="set"><div><b>Auto Clean on Startup</b><small>Run Chemical Clean when browser starts</small></div><button class="sw" id="autoCleanToggle"><i></i></button></div>
+        <div class="set"><div><b>Log Retention</b><small>Auto-purge after period</small></div><select class="sel sm" id="logRetentionSelect"><option value="0">Keep All</option><option value="1">1 Day</option><option value="7" selected>7 Days</option><option value="14">14 Days</option><option value="30">30 Days</option></select></div>
+      </div></div>
+      <div class="panel mt"><div class="panel-h">About</div><div class="panel-b flush"><div class="tbl">
+        <div class="tr"><td>Application</td><td>Al-Kantara Security</td></div>
+        <div class="tr"><td>Version</td><td class="mono" id="aboutVersion">1.3.1</td></div>
+        <div class="tr"><td>Build Timestamp</td><td class="mono" id="aboutBuildTs">—</td></div>
+        <div class="tr"><td>Checksum</td><td class="mono" id="aboutChecksum">—</td></div>
+        <div class="tr"><td>Vendor</td><td>Urbanyl</td></div>
+        <div class="tr"><td>Repository</td><td><a href="https://github.com/urbanyl" target="_blank">github.com/urbanyl</a></td></div>
+      </div></div></div>
+    </section>
+
+  </main>
+</div>
+<script src="dashboard.js"></script>
+</body>
+</html>
